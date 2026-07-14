@@ -1,5 +1,10 @@
-export default function MovieCard({ title, rating, image }) {
-  return (
+import Link from "next/link";
+export default function MovieCard({ id, title, rating, image }) {
+ return (
+  <Link
+    href={`/movie/${id}`}
+    className="block"
+  >
     <div className="group cursor-pointer overflow-hidden rounded-2xl bg-gray-900 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl">
 
       <div className="overflow-hidden">
@@ -24,8 +29,10 @@ export default function MovieCard({ title, rating, image }) {
             Ver
           </button>
         </div>
+
       </div>
 
     </div>
-  );
+   </Link>
+);
 }

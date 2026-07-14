@@ -12,7 +12,6 @@ export async function GET(request) {
         Authorization: `Bearer ${process.env.TMDB_READ_TOKEN}`,
         accept: "application/json",
       },
-      cache: "no-store",
     }
   );
 

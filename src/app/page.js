@@ -5,21 +5,43 @@ import HeroBanner from "../components/HeroBanner";
 import { useEffect, useState } from "react";
 import Header from "../components/Header";
 import MovieGrid from "../components/MovieGrid";
+import MovieSection from "../components/MovieSection";
 
 export default function Home() {
   const [movies, setMovies] = useState([]);
+  const [topRatedMovies, setTopRatedMovies] = useState([]);
+  const [nowPlayingMovies, setNowPlayingMovies] = useState([]);
+const [upcomingMovies, setUpcomingMovies] = useState([]);
+
   const [search, setSearch] = useState("");
 
-  useEffect(() => {
-    async function getMovies() {
-      const response = await fetch("/api/movies");
-      const data = await response.json();
+ useEffect(() => {
+  async function getMovies() {
+   const [
+  popularResponse,
+  topRatedResponse,
+  nowPlayingResponse,
+  upcomingResponse,
+] = await Promise.all([
+  fetch("/api/movies?category=popular"),
+  fetch("/api/movies?category=top_rated"),
+  fetch("/api/movies?category=now_playing"),
+  fetch("/api/movies?category=upcoming"),
+]);
 
-      setMovies(data.results);
-    }
+    const popularData = await popularResponse.json();
+    const topRatedData = await topRatedResponse.json();
+    const nowPlayingData = await nowPlayingResponse.json();
+const upcomingData = await upcomingResponse.json();
 
-    getMovies();
-  }, []);
+    setMovies(popularData.results);
+    setTopRatedMovies(topRatedData.results);
+    setNowPlayingMovies(nowPlayingData.results);
+setUpcomingMovies(upcomingData.results);
+  }
+
+  getMovies();
+}, []);
 
   const filteredMovies = movies.filter((movie) =>
     movie.title.toLowerCase().includes(search.toLowerCase())
@@ -52,6 +74,19 @@ export default function Home() {
 />
 
         <MovieGrid movies={filteredMovies} />
+        <MovieSection
+  title="⭐ Mais Bem Avaliados"
+  movies={topRatedMovies}
+/>
+<MovieSection
+  title="🎬 Em Cartaz"
+  movies={nowPlayingMovies}
+/>
+
+<MovieSection
+  title="🚀 Próximos Lançamentos"
+  movies={upcomingMovies}
+/>
       </main>
     </>
   );
