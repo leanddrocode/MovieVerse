@@ -5,18 +5,53 @@ const headers = {
   accept: "application/json",
 };
 
-export async function getPopularMovies() {
-  const response = await fetch(
-    `${BASE_URL}/movie/popular?language=pt-BR&page=1`,
-    {
-      headers,
-      cache: "no-store",
-    }
-  );
+async function tmdbFetch(endpoint) {
+  const response = await fetch(`${BASE_URL}${endpoint}`, {
+    headers,
+    cache: "no-store",
+  });
 
   if (!response.ok) {
-    throw new Error("Erro ao buscar filmes populares.");
+    throw new Error("Erro ao buscar dados do TMDB.");
   }
 
   return response.json();
+}
+
+
+export function getPopularMovies() {
+  return tmdbFetch("/movie/popular?language=pt-BR&page=1");
+}
+
+
+export function getTopRatedMovies() {
+  return tmdbFetch("/movie/top_rated?language=pt-BR&page=1");
+}
+
+
+export function getMovieDetails(id) {
+  return tmdbFetch(
+    `/movie/${id}?language=pt-BR`
+  );
+}
+
+
+export function getMovieCredits(id) {
+  return tmdbFetch(
+    `/movie/${id}/credits?language=pt-BR`
+  );
+}
+
+
+export function getMovieVideos(id) {
+  return tmdbFetch(
+    `/movie/${id}/videos?language=pt-BR`
+  );
+}
+
+
+export function getSimilarMovies(id) {
+  return tmdbFetch(
+    `/movie/${id}/similar?language=pt-BR&page=1`
+  );
 }

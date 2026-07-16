@@ -1,21 +1,38 @@
-import { NextResponse } from "next/server";
+import {
+  getPopularMovies,
+  getTopRatedMovies,
+} from "@/services/tmdb";
 
 export async function GET(request) {
-  const { searchParams } = new URL(request.url);
+  try {
+    const { searchParams } = new URL(request.url);
+    const category = searchParams.get("category");
 
-  const category = searchParams.get("category") || "popular";
+    let data;
 
-  const response = await fetch(
-    `https://api.themoviedb.org/3/movie/${category}?language=pt-BR&page=1`,
-    {
-      headers: {
-        Authorization: `Bearer ${process.env.TMDB_READ_TOKEN}`,
-        accept: "application/json",
-      },
+    switch (category) {
+      case "top_rated":
+        data = await getTopRatedMovies();
+        break;
+
+      case "popular":
+      default:
+        data = await getPopularMovies();
+        break;
     }
-  );
 
-  const data = await response.json();
+    return Response.json(data);
 
-  return NextResponse.json(data);
+  } catch (error) {
+    console.error(error);
+
+    return Response.json(
+      {
+        error: error.message,
+      },
+      {
+        status: 500,
+      }
+    );
+  }
 }
