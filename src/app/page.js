@@ -1,34 +1,42 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
-import Header from "../components/Header";
-import HeroBanner from "../components/HeroBanner";
 import SearchBar from "../components/SearchBar";
+import HeroBanner from "../components/HeroBanner";
+import { useEffect, useState } from "react";
+import Header from "../components/Header";
 import MovieGrid from "../components/MovieGrid";
 import MovieSection from "../components/MovieSection";
 
 export default function Home() {
   const [movies, setMovies] = useState([]);
   const [topRatedMovies, setTopRatedMovies] = useState([]);
+  const [nowPlayingMovies, setNowPlayingMovies] = useState([]);
+  const [upcomingMovies, setUpcomingMovies] = useState([]);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
     async function getMovies() {
-      try {
-        const [popularResponse, topRatedResponse] = await Promise.all([
-          fetch("/api/movies?category=popular"),
-          fetch("/api/movies?category=top_rated"),
-        ]);
+      const [
+        popularResponse,
+        topRatedResponse,
+        nowPlayingResponse,
+        upcomingResponse,
+      ] = await Promise.all([
+        fetch("/api/movies?category=popular"),
+        fetch("/api/movies?category=top_rated"),
+        fetch("/api/movies?category=now_playing"),
+        fetch("/api/movies?category=upcoming"),
+      ]);
 
-        const popularData = await popularResponse.json();
-        const topRatedData = await topRatedResponse.json();
+      const popularData = await popularResponse.json();
+      const topRatedData = await topRatedResponse.json();
+      const nowPlayingData = await nowPlayingResponse.json();
+      const upcomingData = await upcomingResponse.json();
 
-        setMovies(popularData.results || []);
-        setTopRatedMovies(topRatedData.results || []);
-      } catch (error) {
-        console.error("Erro ao carregar filmes:", error);
-      }
+      setMovies(popularData.results || []);
+      setTopRatedMovies(topRatedData.results || []);
+      setNowPlayingMovies(nowPlayingData.results || []);
+      setUpcomingMovies(upcomingData.results || []);
     }
 
     getMovies();
@@ -41,7 +49,6 @@ export default function Home() {
   return (
     <>
       <Header />
-
       <HeroBanner movie={movies[0]} />
 
       <main
@@ -70,6 +77,16 @@ export default function Home() {
         <MovieSection
           title="⭐ Mais Bem Avaliados"
           movies={topRatedMovies}
+        />
+
+        <MovieSection
+          title="🎬 Em Cartaz"
+          movies={nowPlayingMovies}
+        />
+
+        <MovieSection
+          title="🚀 Próximos Lançamentos"
+          movies={upcomingMovies}
         />
       </main>
     </>

@@ -18,40 +18,34 @@ async function tmdbFetch(endpoint) {
   return response.json();
 }
 
-
 export function getPopularMovies() {
   return tmdbFetch("/movie/popular?language=pt-BR&page=1");
 }
-
 
 export function getTopRatedMovies() {
   return tmdbFetch("/movie/top_rated?language=pt-BR&page=1");
 }
 
+export function getNowPlayingMovies() {
+  return tmdbFetch("/movie/now_playing?language=pt-BR&page=1");
+}
+
+export function getUpcomingMovies() {
+  return tmdbFetch("/movie/upcoming?language=pt-BR&page=1");
+}
 
 export function getMovieDetails(id) {
-  return tmdbFetch(
-    `/movie/${id}?language=pt-BR`
-  );
+  return tmdbFetch(`/movie/${id}?language=pt-BR`);
 }
-
 
 export function getMovieCredits(id) {
-  return tmdbFetch(
-    `/movie/${id}/credits?language=pt-BR`
-  );
+  return tmdbFetch(`/movie/${id}/credits?language=pt-BR`);
 }
-
 
 export function getMovieVideos(id) {
-  return tmdbFetch(
-    `/movie/${id}/videos?language=pt-BR`
-  );
+  return tmdbFetch(`/movie/${id}/videos?language=pt-BR`);
 }
 
-
 export function getSimilarMovies(id) {
-  return tmdbFetch(
-    `/movie/${id}/similar?language=pt-BR&page=1`
-  );
+  return tmdbFetch(`/movie/${id}/similar?language=pt-BR&page=1`);
 }

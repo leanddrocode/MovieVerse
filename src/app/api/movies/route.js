@@ -1,6 +1,8 @@
 import {
   getPopularMovies,
   getTopRatedMovies,
+  getNowPlayingMovies,
+  getUpcomingMovies,
 } from "@/services/tmdb";
 
 export async function GET(request) {
@@ -13,6 +15,14 @@ export async function GET(request) {
     switch (category) {
       case "top_rated":
         data = await getTopRatedMovies();
+        break;
+
+      case "now_playing":
+        data = await getNowPlayingMovies();
+        break;
+
+      case "upcoming":
+        data = await getUpcomingMovies();
         break;
 
       case "popular":
